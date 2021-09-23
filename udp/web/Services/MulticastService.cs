@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
 
-
 class MulticastService : IHostedService
 {
     UdpClient udpClient;
@@ -28,8 +27,9 @@ class MulticastService : IHostedService
             var Message = Encoding.Default.GetString(data);
 
             var json = JsonSerializer.Deserialize<DataPacket>(Message);
-
-            _clients[json.Hostname] = DateTime.Now;
+            
+            Models.PersistedData.Clients[json.Hostname] = DateTime.Now;
+            // _clients[json.Hostname] = DateTime.Now;
 
             System.Console.WriteLine(json.Hostname);
         }

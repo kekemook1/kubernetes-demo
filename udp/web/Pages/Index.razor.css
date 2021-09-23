@@ -7,7 +7,7 @@
 }
 
 .selected {
-    color: rgba(138, 180, 249, 0.56);
+    background-color: rgba(138, 180, 249, 0.56);
 }
 
 .parent{

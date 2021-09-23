@@ -4,12 +4,12 @@
 @using System.Collections.Concurrent
 
 <div class="parent">
-    @for (int i = 0; i < 20; i++)
+    @foreach (var client in Models.PersistedData.Clients.OrderBy(f => f.Key))
     {
-        <div class="child" style="width: 18rem;">
+        <div class="child @isSelected(client.Key)" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">@System.Environment.MachineName</h5>
-                <p class="card-text">Last seen:</p>
+                <h5 class="card-title">@client.Key</h5>
+                <p class="card-text">Last seen: @client.Value</p>
             </div>
         </div>
     }
@@ -17,7 +17,12 @@
 
 @code {
     Double _cpu;
-
+    private string isSelected(string hostname)
+    {
+        if (hostname == System.Environment.MachineName)
+            return "selected";
+        return "";
+    }
     public string CPU()
     {
         return (_cpu * 1).ToString("F", CultureInfo.InvariantCulture) + " %";
