@@ -1,0 +1,82 @@
+@page "/"
+@using System.Diagnostics
+@using System.Globalization
+@using System.Collections.Concurrent
+
+<div class="parent">
+    @for (int i = 0; i < 20; i++)
+    {
+        <div class="child" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@System.Environment.MachineName</h5>
+                <p class="card-text">Last seen:</p>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    Double _cpu;
+
+    public string CPU()
+    {
+        return (_cpu * 1).ToString("F", CultureInfo.InvariantCulture) + " %";
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        // sync or async code
+        await base.OnInitializedAsync();
+        //await PeriodicFooAsync(new TimeSpan(5000), new CancellationToken());
+        _cpu = await GetCpuUsageForProcess();
+    }
+
+    private async Task<double> GetCpuUsageForProcess()
+    {
+        var startTime = DateTime.UtcNow;
+        var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+        await Task.Delay(100);
+
+        var endTime = DateTime.UtcNow;
+        var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime; var cpuUsedMs = (endCpuUsage -
+        startCpuUsage).TotalMilliseconds;
+        var totalMsPassed = (endTime - startTime).TotalMilliseconds; var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount
+        * totalMsPassed);
+        return cpuUsageTotal * 100;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if (firstRender)
+        {
+            // Do work to load page data and set properties
+            var len = 10000;
+            ParallelPartitionerPi(len);
+        }
+    }
+    double ParallelPartitionerPi(int steps)
+    {
+        double sum = 0.0;
+        double step = 1.0 / (double)steps;
+        object obj = new object();
+
+        Parallel.ForEach(
+        Partitioner.Create(0, steps),
+        () => 0.0,
+        (range, state, partial) =>
+        {
+            for (int i = range.Item1; i < range.Item2; i++)
+            {
+                double x = (i - 0.5) * step;
+                partial += 4.0 / (1.0 + x * x);
+            }
+
+            return partial;
+        },
+        partial => { lock (obj) sum += partial; });
+
+        return step * sum;
+    }
+}
