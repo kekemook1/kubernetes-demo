@@ -134,6 +134,8 @@ If we now change the content of our html file and reload, we should observe the 
 
 # 2nd Demo - Replica and LoadBalancing
 The 2nd demo is for showing how the loadbalancer chooses different pods on must requests.
+The app utilizes peer-to-peer node discovery to visualize which node is currently showing a webpage, and which other nodes that are in the cluster.
+
 It is also a demonstration of how to use private registry in a local development environment.
 
 First, create a new minikube cluster with `-insecure-registry "10.0.0.0/24"` as parameter, and enable registries and metrics-server for loadbalancer to work correctly
@@ -156,15 +158,18 @@ For this to work we need to have a fair share of replicas. When opening the site
 **Do the following**
 ```
 cd webapp
-dotnet publish -c Release
 docker build -t localhost:5000/demo-image -f Dockerfile .
 docker push localhost:5000/demo-image
-kubectl create deployment demo --image=localhost:5000/demo-image --replicas=10 --port=80
+kubectl create deployment demo --image=localhost:5000/demo-image --replicas=10 --port=80 --cpu-limits=1
 kubectl expose deployment demo --port=80 --type=LoadBalancer
 minikube service demo
 ```
+
+When you now visit the site, it will jump between pods on the same node.
 
 If you need to scale the number of replicas you can use
 ```
 kubectl scale deployment demo --replicas=30
 ```
+
+![webapp-site](images/webapp-demo.gif)

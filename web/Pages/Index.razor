@@ -3,14 +3,26 @@
 @using System.Globalization
 @using System.Collections.Concurrent
 
-<h1>Hello, world!</h1>
-
-<p>Hostname: @System.Environment.MachineName</p>
-<p>CPU usage: @CPU()</p>
+<div class="parent">
+    @foreach (var client in Models.PersistedData.Clients.OrderBy(f => f.Key))
+    {
+        <div class="child @isSelected(client.Key)" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@client.Key</h5>
+                <p class="card-text">Last seen: @client.Value</p>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     Double _cpu;
-
+    private string isSelected(string hostname)
+    {
+        if (hostname == System.Environment.MachineName)
+            return "selected";
+        return "";
+    }
     public string CPU()
     {
         return (_cpu * 1).ToString("F", CultureInfo.InvariantCulture) + " %";
@@ -20,12 +32,15 @@
     {
         // sync or async code
         await base.OnInitializedAsync();
+        //await PeriodicFooAsync(new TimeSpan(5000), new CancellationToken());
         _cpu = await GetCpuUsageForProcess();
     }
+
     private async Task<double> GetCpuUsageForProcess()
     {
         var startTime = DateTime.UtcNow;
-        var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime; await Task.Delay(500);
+        var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+        await Task.Delay(100);
 
         var endTime = DateTime.UtcNow;
         var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime; var cpuUsedMs = (endCpuUsage -
@@ -42,13 +57,20 @@
         if (firstRender)
         {
             // Do work to load page data and set properties
-            var len = 10000;
-            ParallelPartitionerPi(len);
+            var len = 1000000;
+            var start = DateTime.Now;
+            var work = true;
+            do
+            {
+                ParallelPartitionerPi(len);
+                if ((DateTime.Now.Millisecond - start.Millisecond) == 3000)
+                    work = false;
+            } while (work);
         }
     }
-
     double ParallelPartitionerPi(int steps)
     {
+        System.Console.WriteLine("ParallellPartitionerPi started");
         double sum = 0.0;
         double step = 1.0 / (double)steps;
         object obj = new object();
@@ -68,7 +90,8 @@
         },
         partial => { lock (obj) sum += partial; });
 
+        System.Console.WriteLine("ParallellPartitionerPi ended");
+
         return step * sum;
     }
-
 }
