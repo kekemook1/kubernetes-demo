@@ -1,13 +1,15 @@
 .child{
-    border: 1px solid;
+    border: 1px solid rgb(144, 217, 137);;
     border-radius: 8px;
     margin: 20px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    color: rgb(144, 217, 137);
 }
 
 .selected {
-    background-color: rgba(138, 180, 249, 0.56);
+    background-color: rgb(12, 136, 0);
+    color: rgb(154, 255, 144);
 }
 
 .parent{
