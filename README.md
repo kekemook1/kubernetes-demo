@@ -134,6 +134,8 @@ If we now change the content of our html file and reload, we should observe the 
 
 # 2nd Demo - Replica and LoadBalancing
 The 2nd demo is for showing how the loadbalancer chooses different pods on must requests.
+The app utilizes peer-to-peer node discovery to visualize which node is currently showing a webpage, and which other nodes that are in the cluster.
+
 It is also a demonstration of how to use private registry in a local development environment.
 
 First, create a new minikube cluster with `-insecure-registry "10.0.0.0/24"` as parameter, and enable registries and metrics-server for loadbalancer to work correctly
