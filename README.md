@@ -157,7 +157,7 @@ For this to work we need to have a fair share of replicas. When opening the site
 
 **Do the following**
 ```
-cd webapp
+cd web
 docker build -t localhost:5000/demo-image -f Dockerfile .
 docker push localhost:5000/demo-image
 kubectl create deployment demo --image=localhost:5000/demo-image --replicas=10 --port=80 --cpu-limits=1
