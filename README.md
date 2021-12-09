@@ -140,7 +140,7 @@ It is also a demonstration of how to use private registry in a local development
 
 First, create a new minikube cluster with `insecure-registry "10.0.0.0/24"` as parameter, and enable registries and metrics-server for loadbalancer to work correctly
 ```
-minikube start -insecure-registry "10.0.0.0/24"
+minikube start insecure-registry "10.0.0.0/24"
 minikube addons enable registry 
 minikube addons enable metrics-server
 ```
