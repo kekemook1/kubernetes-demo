@@ -138,7 +138,7 @@ The app utilizes peer-to-peer node discovery to visualize which node is currentl
 
 It is also a demonstration of how to use private registry in a local development environment.
 
-First, create a new minikube cluster with `-insecure-registry "10.0.0.0/24"` as parameter, and enable registries and metrics-server for loadbalancer to work correctly
+First, create a new minikube cluster with `insecure-registry "10.0.0.0/24"` as parameter, and enable registries and metrics-server for loadbalancer to work correctly
 ```
 minikube start -insecure-registry "10.0.0.0/24"
 minikube addons enable registry 
